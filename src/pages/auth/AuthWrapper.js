@@ -24,9 +24,9 @@ const AuthWrapper = ({children}) => {
           </div>
           <div className='auth-wel-action'>
             <div className='auth-wel-content'>
-              <h2>Welcome to Find Edu</h2>
+              <h2>Welcome to Ideallux dashboard</h2>
               <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos voluptate magnam unde fuga impedit maiores. Nemo ea perspiciatis quia commodi.
+
               </p>
             </div>
           </div>

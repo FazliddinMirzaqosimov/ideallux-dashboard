@@ -6,6 +6,7 @@ import apiService from "../../../service/api";
 import { useDispatch, useSelector } from "react-redux";
 import { categoryEdit } from "../../../redux/slice/editSlice";
 import { useForm } from 'antd/lib/form/Form';
+import ImgCrop from "antd-img-crop";
 const initialValueForm = {
   nameUz: "",
   nameRu: "",
@@ -169,6 +170,7 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
     }
   };
   const onChange = ({ fileList: newFileList }) => {
+    form.setFieldsValue({image:newFileList})
     setFileList(newFileList);
   };
   const onPreview = async (file) => {
@@ -244,6 +246,7 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
             name={"image"}
             rules={[{ required: true, message: "Please upload image" }]}
           >
+            <ImgCrop>
             <Upload
               maxCount={1}
               fileList={fileList}
@@ -256,6 +259,7 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
 
               {fileList.length < 1 && "+ Upload"}
             </Upload>
+            </ImgCrop>
           </Form.Item>
           <Form.Item
             wrapperCol={{

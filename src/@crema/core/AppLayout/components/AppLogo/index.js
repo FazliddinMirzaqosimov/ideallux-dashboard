@@ -10,7 +10,7 @@ const AppLogo = ({hasSidebarColor}) => {
       {hasSidebarColor && sidebarColorSet.mode === 'dark' ? (
         <img src='/assets/images/logo-white-with-name.png' alt='crema-logo' />
       ) : (
-        <img src='/assets/images/logo-with-name.png' alt='crema-logo' />
+        <img src='/assets/images/Logo-ideal.png' alt='crema-logo' />
       )}
     </div>
   );

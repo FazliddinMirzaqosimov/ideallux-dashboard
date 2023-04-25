@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { articleEdit } from "../../../redux/slice/editSlice";
 import { MinusCircleOutlined } from "@ant-design/icons";
+import ImgCrop from "antd-img-crop";
 
 
 const initialValueForm = {
@@ -19,11 +20,11 @@ const initialValueForm = {
   items: [
     {
       bodyUz: "",
-      bodyRu:"",
-      bodyImages: [],
+      bodyRu: "",
+      bodyImages: []
     }
   ],
-  image:[]
+  image: []
 };
 
 const ArticlePostEdit = () => {
@@ -169,6 +170,13 @@ const ArticlePostEdit = () => {
 
   const onChangeBodyImage = (index, { fileList: newFileList }) => {
     setMainIndex(index);
+
+    const itemsDefault=[{
+      bodyImages:newFileList
+    }]
+
+    form.setFieldsValue({items:itemsDefault})
+
     const updateImageStates = [...fileListBodyProps];
     updateImageStates[index] = newFileList;
     setFileListBodyProps(updateImageStates);
@@ -250,6 +258,7 @@ const ArticlePostEdit = () => {
   // image
   const onChange = ({ fileList: newFileList }) => {
     setFileListProps(newFileList);
+    form.setFieldsValue({ image: newFileList });
     if (fileList !== undefined || newFileList.length === 0) {
       const id = fileList[0]._id;
       imagesDeleteMutate({ url: "/media", id });
@@ -297,7 +306,7 @@ const ArticlePostEdit = () => {
           style={{
             maxWidth: "100%"
           }}
-        initialValues={initialValueForm}
+          initialValues={initialValueForm}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -333,17 +342,19 @@ const ArticlePostEdit = () => {
               { required: true, message: "Please upload main image" }
             ]}
           >
-            <Upload
-              maxCount={1}
-              fileList={fileListProps}
-              listType="picture-card"
-              onChange={onChange}
-              onPreview={onPreview}
-              beforeUpload={() => false}
-            >
+            <ImgCrop>
+              <Upload
+                maxCount={1}
+                fileList={fileListProps}
+                listType="picture-card"
+                onChange={onChange}
+                onPreview={onPreview}
+                beforeUpload={() => false}
+              >
 
-              Upload
-            </Upload>
+                Upload
+              </Upload>
+            </ImgCrop>
           </Form.Item>
           <Form.List name="items">
             {(fields, { add, remove }) => (
@@ -392,19 +403,22 @@ const ArticlePostEdit = () => {
                           { required: true, message: "Please upload main image" }
                         ]}
                       >
-                        <Upload
-                          maxCount={1}
-                          listType="picture-card"
-                          fileList={editorFileList}
-                          onChange={(newFileList) => onChangeBodyImage(index, newFileList)}
-                          // onPreview={onPreview}
-                          beforeUpload={() => false}
-                        >
-                          Upload
-                        </Upload>
+                        <ImgCrop rotate>
+                          <Upload
+                            maxCount={1}
+                            listType="picture-card"
+                            fileList={editorFileList}
+                            onChange={(newFileList) => onChangeBodyImage(index, newFileList)}
+                            onPreview={onPreview}
+                            beforeUpload={() => false}
+                          >
+                            {editorFileList.length < 1 && "+ Upload"}
+                          </Upload>
+                        </ImgCrop>
                       </Form.Item>
 
-                      <MinusCircleOutlined onClick={() => handleRemove(field.name, remove, index, editorStateUz, editorStateRu, editorFileList)}/>
+                      <MinusCircleOutlined
+                        onClick={() => handleRemove(field.name, remove, index, editorStateUz, editorStateRu, editorFileList)} />
                     </div>
 
                   );

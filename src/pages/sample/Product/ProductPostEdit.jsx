@@ -11,6 +11,7 @@ import { convertFromHTML, convertToHTML } from "draft-convert";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { productEdit } from "../../../redux/slice/editSlice";
+import ImgCrop from "antd-img-crop";
 
 const initialValueForm = {
   titleUz: "",
@@ -269,6 +270,7 @@ const ProductPostEdit = () => {
 
   const onChange = ({ fileList: newFileList }) => {
     setFileListProps(newFileList);
+    form.setFieldsValue({images:newFileList})
   };
 
   const onPreview = async (file) => {
@@ -477,6 +479,9 @@ const ProductPostEdit = () => {
               { required: true, message: "Please upload images" }
             ]}
           >
+            <ImgCrop rotationSlider>
+
+
             <Upload
               maxCount={3}
               fileList={fileListProps}
@@ -489,6 +494,7 @@ const ProductPostEdit = () => {
 
               {fileListProps.length < 3 && "+ Upload"}
             </Upload>
+            </ImgCrop>
           </Form.Item>
           <Form.Item
             wrapperCol={{
