@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Col, Form, Input, Row, Select, Space, Spin, Upload } from "antd";
+import { Button, Col, Form, Input, message, Row, Select, Space, Spin, Upload } from "antd";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState } from "draft-js";
@@ -52,7 +52,9 @@ const ProductPostEdit = () => {
     mutate: postProductMutate,
     data: postProduct,
     isLoading: postProductLoading,
-    isSuccess: postProductSuccess
+    isSuccess: postProductSuccess,
+    error:postProductError,
+    isError:postProductIsError
   } = useMutation(({ url, data }) => apiService.postData(url, data));
   const {
     isLoading: editProductLoading,
@@ -80,7 +82,13 @@ const ProductPostEdit = () => {
   const [fileListProps, setFileListProps] = useState([]);
   const [valuesForm, setValues] = useState({});
   const [isNotEditImages, setIsNotEditImages] = useState(false);
-  console.log(imagesUpload);
+
+  useEffect(()=>{
+    if (postProductIsError){
+      message.error('Article nomlarni avvalgilari bilan bir xilga o\'xshaydi')
+    }
+  },[postProductError])
+
   useEffect(() => {
     if (editProduct !== "") {
       editProductRefetch();

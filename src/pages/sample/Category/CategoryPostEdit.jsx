@@ -22,11 +22,12 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
     isSuccess: imagesUploadSuccess
   } = useMutation(({ url, formData }) => apiService.postData(url, formData));
   const {
-    mutate: postProductMutate,
-    data: postProduct,
-    error:postProductError,
-    isLoading: postProductLoading,
-    isSuccess: postProductSuccess
+    mutate: postCategoryMutate,
+    data: postCategory,
+    error:postCategoryError,
+    isError:postCategoryIsError,
+    isLoading: postCategoryLoading,
+    isSuccess: postCategorySuccess
   } = useMutation(({ url, data }) => apiService.postData(url, data),{
     onError:(error)=>{
       console.log('xatolik ro\'y berdi', error );
@@ -55,7 +56,12 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
   const [valuesForm, setValuesForm] = useState({});
   const [isNotEditImages, setIsNotEditImages] = useState(false);
 
-  console.log(postProductError?.message);
+  useEffect(()=>{
+    if (postCategoryIsError){
+      message.error('Article nomlarni avvalgilari bilan bir xilga o\'xshaydi')
+    }
+  },[postCategoryError])
+
 
   useEffect(() => {
     if (editCategory !== "") {
@@ -72,7 +78,7 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
   },[isModalOpen])
   useEffect(() => {
 
-    if (postProductSuccess || patchCategorySuccess) {
+    if (postCategorySuccess || patchCategorySuccess) {
       setIsModalOpen(false);
       refetch();
       setIsNotEditImages(false)
@@ -81,7 +87,7 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
     if (patchCategorySuccess){
       dispatch(categoryEdit(""))
     }
-  }, [postProduct,patchCategorySuccess]);
+  }, [postCategory,patchCategorySuccess]);
   // edit category initialValue
   useEffect(() => {
     const data = editCategoryData?.data?.category;
@@ -130,7 +136,7 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
     };
 
     if (imagesUploadSuccess && !editCategorySuccess) {
-      postProductMutate({ url: "/categories", data });
+      postCategoryMutate({ url: "/categories", data });
     }else if (isNotEditImages || imagesUploadSuccess){
       patchCategory({url:"/categories",data,id:editCategory})
     }
@@ -197,7 +203,7 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
     <Modal title="Basic Modal" maskClosable={false} visible={isModalOpen} onOk={onFinish} onCancel={handleCancel}
            footer={null}
            width={800}>
-      <Spin spinning={imagesUploadLoading || postProductLoading || editCategoryLoading ||patchCategoryLoading}>
+      <Spin spinning={imagesUploadLoading || postCategoryLoading || editCategoryLoading ||patchCategoryLoading}>
         <Form
           form={form}
           name="basic"

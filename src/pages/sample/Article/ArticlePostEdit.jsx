@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, Space, Spin, Upload } from "antd";
+import { Button, Form, Input, message, Space, Spin, Upload } from "antd";
 import { EditorState } from "draft-js";
 import { convertFromHTML, convertToHTML } from "draft-convert";
 import { Editor } from "react-draft-wysiwyg";
@@ -41,7 +41,7 @@ const ArticlePostEdit = () => {
                                                                                                             url,
                                                                                                             formData
                                                                                                           }) => apiService.postData(url, formData));
-  const { mutate: postArticle, isLoading: postArticleLoading, isSuccess: postArticleSuccess } = useMutation(({
+  const { mutate: postArticle, isLoading: postArticleLoading, isSuccess: postArticleSuccess,error:postArticleError,isError:postArticleIsError } = useMutation(({
                                                                                                                url,
                                                                                                                data
                                                                                                              }) => apiService.postData(url, data));
@@ -74,6 +74,13 @@ const ArticlePostEdit = () => {
   const [mainIndex, setMainIndex] = useState(0);
   console.log(fileList);
 
+  // error
+
+  useEffect(()=>{
+    if (postArticleIsError){
+      message.error('Article nomlarni avvalgilari bilan bir xilga o\'xshaydi')
+    }
+  },[postArticleError])
   useEffect(() => {
     console.log(patchData);
     if (postArticleSuccess || patchArticleSuccess) {
