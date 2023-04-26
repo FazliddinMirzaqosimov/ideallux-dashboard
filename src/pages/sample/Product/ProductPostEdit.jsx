@@ -127,7 +127,7 @@ const ProductPostEdit = () => {
         uid: data?.images[i]?._id,
         name: data?.images[i]?.name,
         status: "done",
-        url: `http://localhost:3000/img/${data?.images[i]?.name}`
+        url: `${process.env.REACT_APP_API_URL}/img/${data?.images[i]?.name}`
       };
       imagesInitial.push(editDefaultImages);
     }

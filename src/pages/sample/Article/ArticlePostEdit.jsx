@@ -120,7 +120,7 @@ const ArticlePostEdit = () => {
           uid: data?.body[i]?.image?._id,
           name: data?.body[i]?.image?.name,
           status: "done",
-          url: `http://localhost:3000/img/${data?.body[i]?.image?.name}`
+          url: `${process.env.REACT_APP_API_URL}/img/${data?.body[i]?.image?.name}`
         }];
 
         initialEditorUz.push(EditorState.createWithContent(convertFromHTML(data?.body[i]?.descriptionUz)));
@@ -134,7 +134,7 @@ const ArticlePostEdit = () => {
       uid: data?.mainImage?._id,
       name: data?.mainImage?.name,
       status: "done",
-      url: `http://localhost:3000/img/${data?.mainImage?.name}`
+      url: `${process.env.REACT_APP_API_URL}/img/${data?.mainImage?.name}`
     }];
 
     const bodyDefault = data?.body.map(body => {

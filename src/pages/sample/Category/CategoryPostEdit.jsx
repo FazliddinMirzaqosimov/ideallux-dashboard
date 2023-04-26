@@ -96,7 +96,7 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
       uid: data?.image?._id,
       name: data?.image?.name,
       status: "done",
-      url: `http://localhost:3000/img/${data?.image?.name}`
+      url: `${process.env.REACT_APP_API_URL}/img/${data?.image?.name}`
     }];
     const edit = {
       nameUz: data?.nameUz,
