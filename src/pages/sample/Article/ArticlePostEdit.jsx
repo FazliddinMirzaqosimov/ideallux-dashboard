@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, message, Space, Spin, Upload } from "antd";
+import { Button, Col, Form, Input, message, Row, Space, Spin, Upload } from "antd";
 import { EditorState } from "draft-js";
 import { convertFromHTML, convertToHTML } from "draft-convert";
 import { Editor } from "react-draft-wysiwyg";
@@ -33,7 +33,7 @@ const ArticlePostEdit = () => {
   const { editArticle } = useSelector(state => state.edit);
   const dispatch = useDispatch();
   // react-query
-  const { mutate: imageUploadMutate, data: imageUpload, isLoading: imageUploadLoading } = useMutation(({
+  const { mutate: imageUploadMutate, data: imageUpload, isLoading: imageUploadLoading,isSuccess:imageUploadSuccess } = useMutation(({
                                                                                                          url,
                                                                                                          formData
                                                                                                        }) => apiService.postData(url, formData));
@@ -41,10 +41,16 @@ const ArticlePostEdit = () => {
                                                                                                             url,
                                                                                                             formData
                                                                                                           }) => apiService.postData(url, formData));
-  const { mutate: postArticle, isLoading: postArticleLoading, isSuccess: postArticleSuccess,error:postArticleError,isError:postArticleIsError } = useMutation(({
-                                                                                                               url,
-                                                                                                               data
-                                                                                                             }) => apiService.postData(url, data));
+  const {
+    mutate: postArticle,
+    isLoading: postArticleLoading,
+    isSuccess: postArticleSuccess,
+    error: postArticleError,
+    isError: postArticleIsError
+  } = useMutation(({
+                     url,
+                     data
+                   }) => apiService.postData(url, data));
   const {
     mutate: patchArticle,
     isLoading: patchArticleLoading,
@@ -72,15 +78,15 @@ const ArticlePostEdit = () => {
   const [editorStatesUz, setEditorStatesUz] = useState([]);
   const [editorStatesRu, setEditorStatesRu] = useState([]);
   const [mainIndex, setMainIndex] = useState(0);
-  console.log(fileList);
 
+  console.log(fileList);
   // error
 
-  useEffect(()=>{
-    if (postArticleIsError){
-      message.error('Article nomlarni avvalgilari bilan bir xilga o\'xshaydi')
+  useEffect(() => {
+    if (postArticleIsError) {
+      message.error("Article nomlarni avvalgilari bilan bir xilga o'xshaydi");
     }
-  },[postArticleError])
+  }, [postArticleError]);
   useEffect(() => {
     console.log(patchData);
     if (postArticleSuccess || patchArticleSuccess) {
@@ -98,13 +104,17 @@ const ArticlePostEdit = () => {
   }, [editArticle]);
 
   useEffect(() => {
+    if (imageUploadSuccess){
     setFileList(imageUpload?.data?.media);
+    }
   }, [imageUpload]);
 
   useEffect(() => {
     const uploadFilesState = [...fileListBody];
     uploadFilesState[mainIndex] = imagesUpload?.data?.media[0];
+    if (imageUploadSuccess){
     setFileListBody(uploadFilesState);
+    }
   }, [imagesUpload]);
 
   useEffect(() => {
@@ -178,11 +188,11 @@ const ArticlePostEdit = () => {
   const onChangeBodyImage = (index, { fileList: newFileList }) => {
     setMainIndex(index);
 
-    const itemsDefault=[{
-      bodyImages:newFileList
-    }]
 
-    form.setFieldsValue({items:itemsDefault})
+    const getValue = form.getFieldsValue();
+    const itemsValue = getValue.items;
+    itemsValue[index].bodyImages = newFileList;
+    form.setFieldsValue({ items: itemsValue });
 
     const updateImageStates = [...fileListBodyProps];
     updateImageStates[index] = newFileList;
@@ -191,6 +201,9 @@ const ArticlePostEdit = () => {
     if (fileListBody[index] || newFileList.length === 0) {
       const id = fileListBody[index]._id;
       imagesDeleteMutate({ url: "/media", id });
+      fileListBody.splice(index, 1);
+      setFileListBody(fileListBody);
+
     }
     const formData = new FormData();
     if (newFileList.length !== 0) {
@@ -199,6 +212,7 @@ const ArticlePostEdit = () => {
 
     }
   };
+
 
   const handleRemove = (name, remove, index, editorStateUz, editorStateRu, editorFileList) => {
     if (editorStateUz === editorStatesUz[index]) {
@@ -262,14 +276,18 @@ const ArticlePostEdit = () => {
   };
 
 
+
+
   // image
   const onChange = ({ fileList: newFileList }) => {
+    console.log(newFileList);
     setFileListProps(newFileList);
     form.setFieldsValue({ image: newFileList });
-    if (fileList !== undefined || newFileList.length === 0) {
-      const id = fileList[0]._id;
+    if (fileList.length!==0 || newFileList.length === 0) {
+      console.log('render');
+      const id = fileList[0]?._id;
       imagesDeleteMutate({ url: "/media", id });
-
+setFileList([])
 
     }
     const formData = new FormData();
@@ -359,7 +377,7 @@ const ArticlePostEdit = () => {
                 beforeUpload={() => false}
               >
 
-                Upload
+                {fileListProps.length < 1 && "+ Upload"}
               </Upload>
             </ImgCrop>
           </Form.Item>
@@ -407,7 +425,7 @@ const ArticlePostEdit = () => {
                         label={`Maqola matn uchun rasm(Изображение для текста статьи) ${index + 1}`}
                         name={[field.name, "bodyImages"]}
                         rules={[
-                          { required: true, message: "Please upload main image" }
+                          { required: true, message: "Please upload body image" }
                         ]}
                       >
                         <ImgCrop rotate>
@@ -445,11 +463,16 @@ const ArticlePostEdit = () => {
               span: 24
             }}
           >
-            <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-              {editArticelSuccess ? `O'zgartirish` : `Qo'shish`}
-            </Button>
+
+
+
+                <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
+                  {editArticelSuccess ? `O'zgartirish` : `Qo'shish`}
+                </Button>
+
           </Form.Item>
         </Form>
+
       </Spin>
     </div>
   );
