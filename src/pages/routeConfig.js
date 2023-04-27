@@ -30,7 +30,7 @@ const routesConfig = [
         messageId: 'sidebar.sample.category',
         type: 'item',
         icon: <BiAlignLeft />,
-        path: '/Category',
+        path: '/category',
       },
     ],
   },
