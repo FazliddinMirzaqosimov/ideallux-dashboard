@@ -14,7 +14,7 @@ const Index = () => {
   const {mutate,isSuccess,isLoading:deleteArticles}=useMutation(({url,id})=>apiService.deleteData(url,id))
 
   const {data, isLoading:getArticles,refetch} = useQuery('product-get', () =>
-    apiService.getData('/products'),{
+    apiService.getData('/products?'),{
       onError: (error) => {
         message.error(error.message);
 
