@@ -89,6 +89,7 @@ const ProductPostEdit = () => {
     }
   },[postProductError])
 
+
   useEffect(() => {
     if (editProduct !== "") {
       editProductRefetch();
@@ -104,7 +105,12 @@ const ProductPostEdit = () => {
       dispatch(productEdit(""));
     }
   }, [postProduct, patchProductSuccess]);
+
   useEffect(() => {
+    console.log('render');
+    if (editProduct===""){
+      form.setFieldsValue(initialValueForm)
+    }
     categoryFetch();
   }, []);
   // edit product initialValue
@@ -126,8 +132,9 @@ const ProductPostEdit = () => {
       const editDefaultImages = {
         uid: data?.images[i]?._id,
         name: data?.images[i]?.name,
+        location:data?.images[i]?.location,
         status: "done",
-        url: `${process.env.REACT_APP_API_URL}/img/${data?.images[i]?.name}`
+        url: data?.images[i]?.location
       };
       imagesInitial.push(editDefaultImages);
     }
@@ -145,7 +152,7 @@ const ProductPostEdit = () => {
         titleRu: data?.titleRu,
         items,
         images: imagesInitial,
-        category: data?.category
+        category: data?.category?._id
       };
       form.setFieldsValue(edit);
     }
@@ -190,12 +197,14 @@ const ProductPostEdit = () => {
       if (image?.uid) {
         return {
           name: image?.name,
-          _id: image?.uid
+          _id: image?.uid,
+          location:image?.location
         };
       } else {
         return {
           name: image?.name,
-          _id: image?._id
+          _id: image?._id,
+          location:image?.location
         };
       }
     });
@@ -431,7 +440,8 @@ const ProductPostEdit = () => {
             )}
           </Form.List>
           <Row gutter={20}>
-            <Col span={12}><Form.Item
+            <Col span={12}>
+              <Form.Item
               label={`Tavsif Uz`}
               name={["descriptionUz"]}
               style={{ width: "100%" }}
@@ -491,7 +501,7 @@ const ProductPostEdit = () => {
 
 
             <Upload
-              maxCount={3}
+              maxCount={5}
               fileList={fileListProps}
               listType="picture-card"
               onChange={onChange}
@@ -500,7 +510,7 @@ const ProductPostEdit = () => {
               onRemove={handleRemoveImage}
             >
 
-              {fileListProps.length < 3 && "+ Upload"}
+              {fileListProps.length < 5 && "+ Upload"}
             </Upload>
             </ImgCrop>
           </Form.Item>

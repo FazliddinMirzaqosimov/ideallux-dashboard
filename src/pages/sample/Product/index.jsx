@@ -5,9 +5,12 @@ import { useMutation, useQuery } from "react-query";
 import { PlusOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { productEdit } from "../../../redux/slice/editSlice";
+import { useDispatch } from "react-redux";
 
 const Index = () => {
   const history=useHistory()
+  const dispatch=useDispatch()
   const {mutate,isSuccess,isLoading:deleteArticles}=useMutation(({url,id})=>apiService.deleteData(url,id))
 
   const {data, isLoading:getArticles,refetch} = useQuery('product-get', () =>
@@ -29,6 +32,7 @@ const Index = () => {
   },[isSuccess])
 
   const addArticle =()=>{
+    dispatch(productEdit(""))
     history.push('/product/add')
   }
 

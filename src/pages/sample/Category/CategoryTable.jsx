@@ -35,8 +35,9 @@ const CategoryTable = ({data,deleteHandle}) => {
       render: (image) => {
         return (
           <Image
-            width={100}
-            src={`${process.env.REACT_APP_API_URL}/img/${image?.name}`}
+            width={50}
+            height={100}
+            src={`${image?.location}`}
           />
         )},
     },

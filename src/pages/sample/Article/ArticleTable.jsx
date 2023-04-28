@@ -39,7 +39,7 @@ const ArticleTable = ({data,deleteHandle}) => {
         return (
         <Image
           width={100}
-          src={`${process.env.REACT_APP_API_URL}/img/${image?.name}`}
+          src={`${image?.location}`}
         />
       )},
     },

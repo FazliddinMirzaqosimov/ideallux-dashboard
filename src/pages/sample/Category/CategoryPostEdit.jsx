@@ -56,6 +56,7 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
   const [valuesForm, setValuesForm] = useState({});
   const [isNotEditImages, setIsNotEditImages] = useState(false);
 
+
   useEffect(()=>{
     if (postCategoryIsError){
       message.error('Article nomlarni avvalgilari bilan bir xilga o\'xshaydi')
@@ -95,8 +96,9 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
     const editDefaultImage = [{
       uid: data?.image?._id,
       name: data?.image?.name,
+      location:data?.image?.location,
       status: "done",
-      url: `${process.env.REACT_APP_API_URL}/img/${data?.image?.name}`
+      url: data?.image?.location
     }];
     const edit = {
       nameUz: data?.nameUz,
@@ -114,18 +116,21 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
   useEffect(() => {
     const image={
       name:  imagesUpload?.data?.media[0]?.name,
-      _id:  imagesUpload?.data?.media[0]?._id
+      _id:  imagesUpload?.data?.media[0]?._id,
+      location:imagesUpload?.data?.media[0]?.location
     }
     let editImage={}
     if (isNotEditImages){
       editImage={
         name:fileList[0]?.name,
-        _id:fileList[0]?.uid
+        _id:fileList[0]?.uid,
+        location:fileList[0]?.location
       }
     }else {
       editImage={
         name:imagesUpload?.data?.media[0]?.name,
-        _id:imagesUpload?.data?.media[0]?._id
+        _id:imagesUpload?.data?.media[0]?._id,
+        location:imagesUpload?.data?.media[0]?.location
       }
     }
 
@@ -134,7 +139,7 @@ const CategoryPostEdit = ({ setIsModalOpen, isModalOpen, refetch }) => {
       nameUz: valuesForm.nameUz,
       nameRu: valuesForm.nameRu
     };
-
+    console.log(data);
     if (imagesUploadSuccess && !editCategorySuccess) {
       postCategoryMutate({ url: "/categories", data });
     }else if (isNotEditImages || imagesUploadSuccess){

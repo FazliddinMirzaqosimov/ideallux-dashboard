@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Input, message, Row, Space, Spin, Upload } from "antd";
+import { Button, Form, Input, message, Space, Spin, Upload } from "antd";
 import { EditorState } from "draft-js";
 import { convertFromHTML, convertToHTML } from "draft-convert";
 import { Editor } from "react-draft-wysiwyg";
@@ -130,7 +130,7 @@ const ArticlePostEdit = () => {
           uid: data?.body[i]?.image?._id,
           name: data?.body[i]?.image?.name,
           status: "done",
-          url: `${process.env.REACT_APP_API_URL}/img/${data?.body[i]?.image?.name}`
+          url: `${data?.body[i]?.image?.location}`
         }];
 
         initialEditorUz.push(EditorState.createWithContent(convertFromHTML(data?.body[i]?.descriptionUz)));
@@ -144,7 +144,7 @@ const ArticlePostEdit = () => {
       uid: data?.mainImage?._id,
       name: data?.mainImage?.name,
       status: "done",
-      url: `${process.env.REACT_APP_API_URL}/img/${data?.mainImage?.name}`
+      url: `${data?.mainImage?.location}`
     }];
 
     const bodyDefault = data?.body.map(body => {
@@ -248,7 +248,8 @@ const ArticlePostEdit = () => {
         "descriptionRu": itemsWithHtmlContentRu[i],
         "image": {
           "_id": fileListBody[i]?._id,
-          "name": fileListBody[i]?.name
+          "name": fileListBody[i]?.name,
+          "location":fileListBody[i]?.location
         }
       };
       body.push(item);
@@ -257,7 +258,8 @@ const ArticlePostEdit = () => {
     const data = {
       mainImage: {
         "_id": fileList[0]?._id,
-        "name": fileList[0]?.name
+        "name": fileList[0]?.name,
+        "location":fileList[0]?.location
       },
       body,
       titleUz: values?.titleUz,

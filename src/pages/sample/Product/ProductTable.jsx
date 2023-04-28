@@ -4,13 +4,20 @@ import {  productEdit } from "../../../redux/slice/editSlice";
 import { Button, Image, Popconfirm, Space, Table } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 
 const ProductTable = ({data,deleteHandle}) => {
   const dispatch=useDispatch()
   const history=useHistory()
+  const [reverseData,setReverceData]=useState([])
   const Delete = async (id) => {
     deleteHandle('/products',id)
   };
+
+  useEffect(()=>{
+    const reverseData=data?.reverse()
+    setReverceData(reverseData)
+  },[data])
   const Edit = (id) => {
     dispatch(productEdit(id))
     history.push('/product/add')
@@ -36,8 +43,9 @@ const ProductTable = ({data,deleteHandle}) => {
       render: (image) => {
         return (
           <Image
-            width={100}
-            src={`${process.env.REACT_APP_API_URL}/img/${image[0]?.name}`}
+            width={50}
+
+            src={image[0]?.location}
           />
         )},
     },
@@ -68,7 +76,7 @@ const ProductTable = ({data,deleteHandle}) => {
     <div>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={reverseData}
         rowKey={(record) => record._id}
       />
     </div>
