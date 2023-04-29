@@ -36,7 +36,7 @@ const CategoryTable = ({data,deleteHandle}) => {
         return (
           <Image
             width={50}
-            height={100}
+
             src={`${image?.location}`}
           />
         )},
